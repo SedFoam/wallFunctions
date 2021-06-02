@@ -12,8 +12,6 @@ wallFunctions
 
 This repository provides the wilcox Omega WallFunction.
 
-[![](https://i.ibb.co/WgS6PYB/Capture-d-e-cran-2018-12-14-a-11-27-01.png)](https://www.youtube.com/watch?v=cVf7qm_ZDK0)
-
 Status
 ------
 
