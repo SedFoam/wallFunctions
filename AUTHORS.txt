@@ -1,0 +1,7 @@
+AUTHORS
+
+ * Cyrille Bonamy (LEGI UMR 5519 - Grenoble - France)
+   Cyrille.Bonamy (A) univ-grenoble-alpes.fr
+ * Julien Chauchat (LEGI UMR 5519 - Grenoble - France)
+   Julien.Chauchat (A) univ-grenoble-alpes.fr
+
