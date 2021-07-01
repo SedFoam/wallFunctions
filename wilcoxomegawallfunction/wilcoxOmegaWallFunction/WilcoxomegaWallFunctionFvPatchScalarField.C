@@ -45,7 +45,7 @@ scalar WilcoxomegaWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
 
 void WilcoxomegaWallFunctionFvPatchScalarField::checkType()
 {
-    if (!isA<wallFvPatch>(patch()))
+    if (isA<wallFvPatch>(patch()) == false)
     {
         FatalErrorInFunction
             << "Invalid wall function specification" << nl
@@ -105,7 +105,7 @@ void WilcoxomegaWallFunctionFvPatchScalarField::createAveragingWeights()
 
     const fvMesh& mesh = omega.mesh();
 
-    if (initialised_ && !mesh.changing())
+    if (initialised_ && (mesh.changing() == false))
     {
         return;
     }
@@ -181,7 +181,7 @@ void WilcoxomegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
     // accumulate all of the G and omega contributions
     forAll(cornerWeights_, patchi)
     {
-        if (!cornerWeights_[patchi].empty())
+        if (cornerWeights_[patchi].empty() == false)
         {
             WilcoxomegaWallFunctionFvPatchScalarField& opf = omegaPatch(patchi);
 
@@ -194,7 +194,7 @@ void WilcoxomegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
     // apply zero-gradient condition for omega
     forAll(cornerWeights_, patchi)
     {
-        if (!cornerWeights_[patchi].empty())
+        if (cornerWeights_[patchi].empty() == false)
         {
             WilcoxomegaWallFunctionFvPatchScalarField& opf = omegaPatch(patchi);
 
