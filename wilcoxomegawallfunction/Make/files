@@ -1,3 +1,3 @@
 wilcoxOmegaWallFunction/WilcoxomegaWallFunctionFvPatchScalarField.C
 
-LIB = $(FOAM_USER_LIBBIN)/libWilcoxOmegaWallFunction
+LIB = $(FOAM_MODULE_LIBBIN)/libWilcoxOmegaWallFunction
