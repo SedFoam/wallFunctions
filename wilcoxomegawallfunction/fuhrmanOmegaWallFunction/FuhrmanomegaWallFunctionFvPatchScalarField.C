@@ -85,7 +85,10 @@ void FuhrmanomegaWallFunctionFvPatchScalarField::setMaster()
     {
         if (isA<FuhrmanomegaWallFunctionFvPatchScalarField>(bf[patchi]))
         {
-            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch(patchi);
+            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch
+            (
+                patchi
+            );
 
             if (master == -1)
             {
@@ -185,7 +188,10 @@ void FuhrmanomegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
     {
         if (cornerWeights_[patchi].empty() == false)
         {
-            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch(patchi);
+            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch
+            (
+                patchi
+            );
 
             const List<scalar>& w = cornerWeights_[patchi];
 
@@ -198,7 +204,10 @@ void FuhrmanomegaWallFunctionFvPatchScalarField::calculateTurbulenceFields
     {
         if (cornerWeights_[patchi].empty() == false)
         {
-            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch(patchi);
+            FuhrmanomegaWallFunctionFvPatchScalarField& opf = omegaPatch
+            (
+                patchi
+            );
 
             opf == scalarField(omega0, opf.patch().faceCells());
         }
