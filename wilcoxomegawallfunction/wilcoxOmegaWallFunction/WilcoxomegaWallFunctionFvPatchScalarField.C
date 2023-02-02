@@ -45,7 +45,7 @@ scalar WilcoxomegaWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
 
 void WilcoxomegaWallFunctionFvPatchScalarField::checkType()
 {
-    if (not isA<wallFvPatch>(patch()))
+    if (isA<wallFvPatch>(patch()) == false)
     {
         FatalErrorInFunction
             << "Invalid wall function specification" << nl
