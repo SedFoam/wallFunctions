@@ -45,7 +45,7 @@ scalar FuhrmanomegaWallFunctionFvPatchScalarField::tolerance_ = 1e-5;
 
 void FuhrmanomegaWallFunctionFvPatchScalarField::checkType()
 {
-    if (isA<wallFvPatch>(patch()) == false)
+    if (not isA<wallFvPatch>(patch()))
     {
         FatalErrorInFunction
             << "Invalid wall function specification" << nl
