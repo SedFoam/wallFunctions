@@ -1,0 +1,40 @@
+#!/bin/sh
+
+nTests=0  # number of test
+failedTests=0  # counter for failed tests
+
+pathTests=$(cat listTests.txt)
+
+basePath=$(pwd)
+
+echo "run tests"
+
+for path in $pathTests
+do
+    nTests=$(( nTests + 1 ))
+    echo "\npath: " $path
+    cd $path
+    ./Allrun > /dev/null 2>&1
+    python test.py
+
+    resTest=$?
+
+    if test "$resTest" -ne 0
+    then
+        echo 'test failed'
+        failedTests=$(( failedTests + 1 ))
+    else
+        echo 'test success'
+    fi
+    
+    ./Allclean > /dev/null 2>&1
+    cd $basePath
+done
+
+if test "$failedTests" -ne 0
+then
+    echo 'warning! Some tests failed'
+fi
+
+echo '\nnumber of tests tried :' $nTests
+echo 'number of tests failed :' $failedTests

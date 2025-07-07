@@ -10,12 +10,12 @@ wallFunctions
 [![OpenFOAM 6](https://img.shields.io/badge/OpenFOAM-6-brightgreen.svg)](https://openfoam.org/)
 [![OpenFOAM 5.x](https://img.shields.io/badge/OpenFOAM-5.x-brightgreen.svg)](https://openfoam.org/)
 
-This repository provides the wilcox Omega WallFunction.
+This repository provides different wall functions providing rough boundary condition for turbulent quantities k and omega.
 
 Status
 ------
 
-The wilcox Omega WallFunction is in development and is not yet fully functional.
+The roughWallFunctions library is in development and is not yet fully functional.
 
 Pull requests are encouraged!
 
@@ -29,8 +29,8 @@ Installation
 
 ```bash
 cd $WM_PROJECT_USER_DIR
-git clone https://github.com/sedfoam/wallFunctions
-cd wallFunctions
+git clone https://github.com/sedfoam/roughWallFunctions
+cd roughWallFunctions
 ./Allwclean
 ./Allwmake
 ```

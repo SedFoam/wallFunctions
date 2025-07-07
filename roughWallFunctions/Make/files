@@ -1,0 +1,7 @@
+wilcoxOmegaWallFunction/wilcoxOmegaWallFunctionFvPatchScalarField.C
+fuhrmanOmegaWallFunction/fuhrmanOmegaWallFunctionFvPatchScalarField.C
+knoppkWallFunction/knoppkWallFunctionFvPatchScalarField.C
+knoppOmegaWallFunction/knoppOmegaWallFunctionFvPatchScalarField.C
+leeOmegaWallFunction/leeOmegaWallFunctionFvPatchScalarField.C
+
+LIB = $(FOAM_USER_LIBBIN)/libroughWallFunctions

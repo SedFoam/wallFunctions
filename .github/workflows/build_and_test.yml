@@ -1,0 +1,107 @@
+name: build_and_test
+on: [push, pull_request]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    container: opencfd/openfoam-dev:2412
+    steps:
+      - name: Install git
+        run: |
+          sudo apt-get update && sudo apt-get install -y git
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Build roughWallFunctions
+        run: |
+          shopt -s expand_aliases && source /openfoam/bash.rc &&
+          export FOAM_USER_LIBBIN=$FOAM_SITE_LIBBIN && ./Allwmake -prefix=group
+      - uses: actions/upload-artifact@4.4.3
+        with:
+          name: roughWallFunctions-binary
+          path: /usr/lib/openfoam/openfoam2412/site
+
+  run_tests:
+    runs-on: ubuntu-latest
+    container: opencfd/openfoam-dev:2412
+    needs: [build, checkstyle, checkpep8]
+    steps:
+      - name: Install git and Python packages
+        run: |
+          sudo apt-get update && sudo apt-get install -y git python3 python3-pip python3-venv
+          python3 -m venv /home/sudofoam/pyenv
+          source /home/sudofoam/pyenv/bin/activate
+          pip3 install fluidfoam
+      - name: Check out repository code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - uses: actions/download-artifact@v4.1.8
+        with:
+          name: roughWallFunctions-binary
+          path: /usr/lib/openfoam/openfoam2412/site
+      - name: chmod roughWallFunctions binary
+        run: chmod a+x -R *
+        working-directory: /usr/lib/openfoam/openfoam2412/site
+
+      - name: Test Wilcox 1D channel
+        run: |
+          source /openfoam/bash.rc
+          source /home/sudofoam/pyenv/bin/activate
+          sudo chmod -R a+rwX tests
+          cd tests/testWilcoxOmegaWallFunction
+          runuser -u sudofoam -- ./Allrun
+          python3 test.py
+
+      - name: Test Fuhrman 1D channel
+        run: |
+          source /openfoam/bash.rc
+          source /home/sudofoam/pyenv/bin/activate
+          cd tests/testFuhrmanOmegaWallFunction
+          runuser -u sudofoam -- ./Allrun
+          python3 test.py
+
+      - name: Test Knopp 1D channel
+        run: |
+          source /openfoam/bash.rc
+          source /home/sudofoam/pyenv/bin/activate
+          cd tests/testKnoppWallFunctions
+          runuser -u sudofoam -- ./Allrun
+          python3 test.py
+
+      - name: Test Lee 1D channel
+        run: |
+          source /openfoam/bash.rc
+          source /home/sudofoam/pyenv/bin/activate
+          cd tests/testLeeOmegaWallFunction
+          runuser -u sudofoam -- ./Allrun
+          python3 test.py
+
+
+  checkstyle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install vera++
+        run: sudo apt-get update && sudo apt-get install -y vera++
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Pull submodules
+        run: |
+          git submodule init && git submodule update --remote
+      - name: Check style
+        run: |
+          shopt -s expand_aliases && ./foamStyleCheck/checkStyle
+
+  checkpep8:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Python Style Checker
+        uses: andymckay/pycodestyle-action@0.1.3

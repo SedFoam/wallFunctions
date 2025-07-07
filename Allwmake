@@ -2,6 +2,6 @@
 cd ${0%/*} || exit 1    # run from this directory
 set -x
 
-wilcoxomegawallfunction/Allwmake
+roughWallFunctions/Allwmake
 
 # ----------------------------------------------------------------- end-of-file
