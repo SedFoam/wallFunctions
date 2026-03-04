@@ -4,4 +4,15 @@ AUTHORS
    Cyrille.Bonamy (A) univ-grenoble-alpes.fr
  * Julien Chauchat (LEGI UMR 5519 - Grenoble - France)
    Julien.Chauchat (A) univ-grenoble-alpes.fr
-
+ * Matthias Renaud (LEGI OXALIA UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   matthias.renaud (A) univ-grenoble-alpes.fr
+ * Antoine Mathieu (LEGI UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   Antoine.Mathieu (A) univ-grenoble-alpes.fr
+ * Eduard Puig Montella (LEGI UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   eduard.puig-montella (A) univ-grenoble-alpes.fr
+ * Remi Chassagne (LEGI UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   remi.chassagne (A) univ-grenoble-alpes.fr
+ * Maxime Kaczmarek (LEGI UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   Maxime.Kaczmarek (A) univ-grenoble-alpes.fr
+ * Tim Nagel (LEGI UGA/GINP/CNRS UMR 5519 - Grenoble - France)
+   Tim.Nagel (A) legi.cnrs.fr
