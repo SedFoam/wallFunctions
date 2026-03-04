@@ -9,7 +9,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    container: opencfd/openfoam-dev:2412
+    container: opencfd/openfoam-dev:2512
     steps:
       - name: Install git
         run: |
@@ -22,14 +22,14 @@ jobs:
         run: |
           shopt -s expand_aliases && source /openfoam/bash.rc &&
           export FOAM_USER_LIBBIN=$FOAM_SITE_LIBBIN && ./Allwmake -prefix=group
-      - uses: actions/upload-artifact@4.4.3
+      - uses: actions/upload-artifact@v4.4.3
         with:
           name: roughWallFunctions-binary
-          path: /usr/lib/openfoam/openfoam2412/site
+          path: /usr/lib/openfoam/openfoam2512/site
 
   run_tests:
     runs-on: ubuntu-latest
-    container: opencfd/openfoam-dev:2412
+    container: opencfd/openfoam-dev:2512
     needs: [build, checkstyle, checkpep8]
     steps:
       - name: Install git and Python packages
@@ -45,10 +45,10 @@ jobs:
       - uses: actions/download-artifact@v4.1.8
         with:
           name: roughWallFunctions-binary
-          path: /usr/lib/openfoam/openfoam2412/site
+          path: /usr/lib/openfoam/openfoam2512/site
       - name: chmod roughWallFunctions binary
         run: chmod a+x -R *
-        working-directory: /usr/lib/openfoam/openfoam2412/site
+        working-directory: /usr/lib/openfoam/openfoam2512/site
 
       - name: Test Wilcox 1D channel
         run: |
