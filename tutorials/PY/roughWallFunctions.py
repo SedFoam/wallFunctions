@@ -1,6 +1,4 @@
-"""
-
-"""
+""" """
 
 import numpy as np
 from abc import ABC, abstractmethod
@@ -29,15 +27,7 @@ def omegaLog(y1, k, betaStar=0.09, kappa=0.41):
     return np.sqrt(k) / (np.sqrt(betaStar) * kappa * y1)
 
 
-def omegaSmooth(
-        y1,
-        k,
-        blending,
-        nuF=1e-6,
-        beta1=0.075,
-        betaStar=0.09,
-        kappa=0.41
-):
+def omegaSmooth(y1, k, blending, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
     """
     Inputs:
     - y1: ndarray, distance from wall boundary
@@ -49,12 +39,11 @@ def omegaSmooth(
     - kappa: float, von karman constant
     """
     F = blendingFunction.create(blending)
-    omega = F.blendOmega(
-        y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41)
+    omega = F.blendOmega(y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41)
     return omega
 
 
-def SrFuhrman(knP, knLim=5.):
+def SrFuhrman(knP, knLim=5.0):
     """
     return Sr coefficient from Fuhrman (2010)
     Inputs:
@@ -62,9 +51,8 @@ def SrFuhrman(knP, knLim=5.):
     - knLim: float, transition between hydraulic
     smooth and rough regimes
     """
-    SrLow = (200 / knP)**2
-    SrHigh = (100 / knP) + (
-        (200 / knP)**2 - (100 / knP)) * np.exp(knLim-knP)
+    SrLow = (200 / knP) ** 2
+    SrHigh = (100 / knP) + ((200 / knP) ** 2 - (100 / knP)) * np.exp(knLim - knP)
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
 
@@ -80,7 +68,7 @@ def omegaFuhrman(ustar):
     return omega
 
 
-def getSr(knP, knLim=25.):
+def getSr(knP, knLim=25.0):
     """
     return Sr coefficient from Wilcox
     Inputs:
@@ -88,7 +76,7 @@ def getSr(knP, knLim=25.):
     - knLim: float, transition between hydraulic
     smooth and rough regimes
     """
-    SrLow = (50 / knP)**2
+    SrLow = (50 / knP) ** 2
     SrHigh = 100 / knP
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
@@ -112,9 +100,9 @@ def getD0(ustar):
     - ustar: ndarray, friction velocity"""
     knP = kn * ustar / nuF  # roughness Reynolds number
     d0 = 0.03 * kn
-    d0 *= np.where(knP < 30, (knP/30)**(2/3), 1)
-    d0 *= np.where(knP < 45, (knP/45)**(1/4), 1)
-    d0 *= np.where(knP < 60, (knP/60)**(1/4), 1)
+    d0 *= np.where(knP < 30, (knP / 30) ** (2 / 3), 1)
+    d0 *= np.where(knP < 45, (knP / 45) ** (1 / 4), 1)
+    d0 *= np.where(knP < 60, (knP / 60) ** (1 / 4), 1)
     return d0
 
 
@@ -126,8 +114,7 @@ def omegaLee(ustar, y1):
     """
     d0 = getD0(ustar)
     knP = kn * ustar / nuF  # roughness Reynolds number
-    omega = ustar * np.log(1 + y1/d0) / (
-        np.sqrt(betaStar) * kappa * d0)
+    omega = ustar * np.log(1 + y1 / d0) / (np.sqrt(betaStar) * kappa * d0)
     limiter = 6 * nuF / (betaStar * y1**2)
     omega = np.where(omega < limiter, omega, limiter)
     return omega
@@ -148,6 +135,7 @@ def kKnoppEisfeld(ustar):
 
 # - - - - - BLENDING FUNCTIONS - - - - - #
 
+
 class blendingFunction(ABC):
 
     blend_types = {}
@@ -157,28 +145,20 @@ class blendingFunction(ABC):
         def decorator(subclass):
             cls.blend_types[blend_type] = subclass
             return subclass
+
         return decorator
 
     @classmethod
     def create(cls, bFuncName):
         if bFuncName not in cls.blend_types:
-            raise ValueError(
-                "blending function not supported: " + bFuncName)
+            raise ValueError("blending function not supported: " + bFuncName)
         return cls.blend_types[bFuncName]()
 
 
 @blendingFunction.register_blend_type("max")
 class max(blendingFunction):
 
-    def blendOmega(
-            self,
-            y1,
-            k,
-            nuF=1e-6,
-            beta1=0.075,
-            betaStar=0.09,
-            kappa=0.41
-    ):
+    def blendOmega(self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
         omVis = omegaVis(y1, nuF=nuF, beta1=beta1)
         omLog = omegaLog(y1, k, betaStar=betaStar, kappa=kappa)
         return np.where(omVis > omLog, omVis, omLog)
@@ -188,20 +168,12 @@ class max(blendingFunction):
 class binomial2(blendingFunction):
 
     def __init__(self):
-        self.n = 2.
+        self.n = 2.0
 
-    def blendOmega(
-            self,
-            y1,
-            k,
-            nuF=1e-6,
-            beta1=0.075,
-            betaStar=0.09,
-            kappa=0.41
-    ):
+    def blendOmega(self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
         omVis = omegaVis(y1, nuF=nuF, beta1=beta1)
         omLog = omegaLog(y1, k, betaStar=betaStar, kappa=kappa)
-        return (omVis**self.n + omLog**self.n)**(1/self.n)
+        return (omVis**self.n + omLog**self.n) ** (1 / self.n)
 
 
 @blendingFunction.register_blend_type("exponential")

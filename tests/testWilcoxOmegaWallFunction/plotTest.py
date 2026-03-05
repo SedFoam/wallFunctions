@@ -3,7 +3,6 @@ plot omega value at wall boundary wilcoxOmegaWallFunction
 compare result from OpenFOAM and direct computation from shear stress
 """
 
-
 import numpy as np
 from fluidfoam import readof as rdf
 import matplotlib.pyplot as plt
@@ -19,8 +18,8 @@ betaK = 0.09  # constant of the model
 kappa = 0.41  # von Karmann constant
 
 
-def getSr(knP, knLim=25.):
-    SrLow = (50 / knP)**2
+def getSr(knP, knLim=25.0):
+    SrLow = (50 / knP) ** 2
     SrHigh = 100 / knP
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
@@ -57,14 +56,13 @@ y1 = Zmesh[0]  # first cell center distance to wall
 for i, time in enumerate(timeList):
     # specific shear stress exerted by the wall
     tauW = rdf.readvector(
-        "./", time, "wallShearStress", boundary="roughWall",
-        verbose=False)[0, 0]
+        "./", time, "wallShearStress", boundary="roughWall", verbose=False
+    )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     omWall[i] = rdf.readscalar(
-        "./", time, "omega", boundary="roughWall",
-        verbose=False)[0]
-    omFC[i] = rdf.readscalar(
-        "./", time, "omega", verbose=False)[0]
+        "./", time, "omega", boundary="roughWall", verbose=False
+    )[0]
+    omFC[i] = rdf.readscalar("./", time, "omega", verbose=False)[0]
 
 print(f"friction velocity: {ustarArr} m/s")
 
@@ -87,23 +85,15 @@ zmX1 = 50
 zmX2 = omWall[-1] + 20
 zmY1 = -0.002
 zmY2 = 0.003
-zmAx = axOm1.inset_axes(
-    [0.4, 0.5, 0.47, 0.47],
-    xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAx = axOm1.inset_axes([0.4, 0.5, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
 zmAx.plot(omTend, Zmesh, marker="x", color="#0072B2")
 zmAx.scatter(omWall[-1], 0, color="firebrick")
 zmAx.grid()
 
 axOm2 = fig.add_subplot(gs[0, 1])
-axOm2.scatter(
-    timeArr, omWall, marker="o",
-    color="firebrick", label="wall value")
-axOm2.scatter(
-    timeArr, omFC, marker="x",
-    color="steelblue", label="first cell")
-axOm2.scatter(
-    timeArr, omWilcox, marker="+",
-    color="forestgreen", label="Wilcox")
+axOm2.scatter(timeArr, omWall, marker="o", color="firebrick", label="wall value")
+axOm2.scatter(timeArr, omFC, marker="x", color="steelblue", label="first cell")
+axOm2.scatter(timeArr, omWilcox, marker="+", color="forestgreen", label="Wilcox")
 
 axErr = fig.add_subplot(gs[1, 1])
 axErr.scatter(timeArr, relErr, color="steelblue")

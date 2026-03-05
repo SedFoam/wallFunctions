@@ -26,9 +26,9 @@ def getD0(ustar):
     - ustar: ndarray, friction velocity"""
     knP = kn * ustar / nuF  # roughness Reynolds number
     d0 = 0.03 * kn
-    d0 *= np.where(knP < 30, (knP/30)**(2/3), 1)
-    d0 *= np.where(knP < 45, (knP/45)**(1/4), 1)
-    d0 *= np.where(knP < 60, (knP/60)**(1/4), 1)
+    d0 *= np.where(knP < 30, (knP / 30) ** (2 / 3), 1)
+    d0 *= np.where(knP < 45, (knP / 45) ** (1 / 4), 1)
+    d0 *= np.where(knP < 60, (knP / 60) ** (1 / 4), 1)
     return d0
 
 
@@ -51,7 +51,7 @@ def omegaLee(ustar, y1):
     """
     d0 = getD0(ustar)
     knP = kn * ustar / nuF  # roughness Reynolds number
-    omega = ustar * np.log(1 + y1/d0) / (np.sqrt(betaStar) * kappa * d0)
+    omega = ustar * np.log(1 + y1 / d0) / (np.sqrt(betaStar) * kappa * d0)
     limiter = 6 * nuF / (beta1 * y1**2)
     omega = np.where(omega < limiter, omega, limiter)
     return omega
@@ -77,15 +77,13 @@ y1 = Zmesh[0]  # first cell center distance to wall
 for i, time in enumerate(timeList):
     # specific shear stress exerted by the wall
     tauW = rdf.readvector(
-        "./", time, "wallShearStress",
-        boundary="roughWall", verbose=False)[0, 0]
+        "./", time, "wallShearStress", boundary="roughWall", verbose=False
+    )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     omWall[i] = rdf.readscalar(
-        "./", time, "omega", boundary="roughWall",
-        verbose=False)[0]
-    omFC[i] = rdf.readscalar(
-        "./", time, "omega",
-        verbose=False)[0]
+        "./", time, "omega", boundary="roughWall", verbose=False
+    )[0]
+    omFC[i] = rdf.readscalar("./", time, "omega", verbose=False)[0]
 
 
 omLee[:] = omegaLee(ustarArr, y1)
@@ -97,7 +95,8 @@ if np.any(relErr > tolOm):
     print(
         "ERROR! omega values OpenFOAM and "
         + "computed from wallShearStress are not matching"
-        + f"\nrelative error on omega: {relErr}")
+        + f"\nrelative error on omega: {relErr}"
+    )
 else:
     print(f"omega value OK, maximum relative error {np.max(relErr)}")
 

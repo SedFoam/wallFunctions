@@ -18,7 +18,7 @@ betaK = 0.09  # constant of the model
 kappa = 0.41  # von Karmann constant
 
 
-def getSr(knP, knLim=25.):
+def getSr(knP, knLim=25.0):
     """
     return Sr coefficient
     Inputs:
@@ -26,7 +26,7 @@ def getSr(knP, knLim=25.):
     - knLim: float, transition between hydraulic
     smooth and rough regimes
     """
-    SrLow = (50 / knP)**2
+    SrLow = (50 / knP) ** 2
     SrHigh = 100 / knP
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
@@ -63,15 +63,13 @@ y1 = Zmesh[0]  # first cell center distance to wall
 for i, time in enumerate(timeList):
     # specific shear stress exerted by the wall
     tauW = rdf.readvector(
-        "./", time, "wallShearStress",
-        boundary="roughWall", verbose=False)[0, 0]
+        "./", time, "wallShearStress", boundary="roughWall", verbose=False
+    )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     omWall[i] = rdf.readscalar(
-        "./", time, "omega", boundary="roughWall",
-        verbose=False)[0]
-    omFC[i] = rdf.readscalar(
-        "./", time, "omega",
-        verbose=False)[0]
+        "./", time, "omega", boundary="roughWall", verbose=False
+    )[0]
+    omFC[i] = rdf.readscalar("./", time, "omega", verbose=False)[0]
 
 
 omWilcox[:] = omegaWilcox(ustarArr)
@@ -83,7 +81,8 @@ if np.any(relErr > tolOm):
     print(
         "ERROR! omega values OpenFOAM and "
         + "computed from wallShearStress are not matching"
-        + f"\nrelative error on omega: {relErr}")
+        + f"\nrelative error on omega: {relErr}"
+    )
 else:
     print(f"omega value OK, maximum relative error {np.max(relErr)}")
 

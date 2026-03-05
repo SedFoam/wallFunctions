@@ -4,7 +4,6 @@ plot omega value at wall boundary leeOmegaWallFunction
 compare result from OpenFOAM and direct computation from shear stress
 """
 
-
 import numpy as np
 from fluidfoam import readof as rdf
 import matplotlib.pyplot as plt
@@ -28,9 +27,9 @@ def getD0(ustar):
     - ustar: ndarray, friction velocity"""
     knP = kn * ustar / nuF  # roughness Reynolds number
     d0 = 0.03 * kn
-    d0 *= np.where(knP < 30, (knP/30)**(2/3), 1)
-    d0 *= np.where(knP < 45, (knP/45)**(1/4), 1)
-    d0 *= np.where(knP < 60, (knP/60)**(1/4), 1)
+    d0 *= np.where(knP < 30, (knP / 30) ** (2 / 3), 1)
+    d0 *= np.where(knP < 45, (knP / 45) ** (1 / 4), 1)
+    d0 *= np.where(knP < 60, (knP / 60) ** (1 / 4), 1)
     return d0
 
 
@@ -86,18 +85,16 @@ y1 = Zmesh[0]  # first cell center distance to wall
 for i, time in enumerate(timeList):
     # specific shear stress exerted by the wall
     tauW = rdf.readvector(
-        "./", time, "wallShearStress", boundary="roughWall",
-        verbose=False)[0, 0]
+        "./", time, "wallShearStress", boundary="roughWall", verbose=False
+    )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     # turbulent kinetic energy
-    kWall[i] = rdf.readscalar(
-        "./", time, "k", boundary="roughWall",
-        verbose=False)[0]
+    kWall[i] = rdf.readscalar("./", time, "k", boundary="roughWall", verbose=False)[0]
     kFC[i] = rdf.readscalar("./", time, "k", verbose=False)[0]
     # omega field
     omWall[i] = rdf.readscalar(
-        "./", time, "omega", boundary="roughWall",
-        verbose=False)[0]
+        "./", time, "omega", boundary="roughWall", verbose=False
+    )[0]
     omFC[i] = rdf.readscalar("./", time, "omega", verbose=False)[0]
 
 print(f"friction velocity: {ustarArr} m/s")
@@ -118,33 +115,26 @@ gs = fig.add_gridspec(2, 4)
 
 axK1 = fig.add_subplot(gs[:, 0])
 axK1.plot(kTend, Zmesh, marker="x", color="#0072B2")
-axK1.scatter(
-    kWall[-1], 0, marker="o", color="firebrick", label="wall value")
-axK1.scatter(
-    kKnopp[-1], 0, marker="+", color="forestgreen", label="formula")
+axK1.scatter(kWall[-1], 0, marker="o", color="firebrick", label="wall value")
+axK1.scatter(kKnopp[-1], 0, marker="+", color="forestgreen", label="formula")
 axK1.legend()
 # zoom on near wall area
-zmX1, zmX2, = axK1.get_xlim()
+(
+    zmX1,
+    zmX2,
+) = axK1.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxK = axK1.inset_axes(
-    [0.7, 0.3, 0.47, 0.47],
-    xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxK = axK1.inset_axes([0.7, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
 zmAxK.plot(kTend, Zmesh, marker="x", color="#0072B2")
 zmAxK.scatter(kWall[-1], 0, marker="o", color="firebrick")
 zmAxK.scatter(kKnopp[-1], 0, marker="+", color="forestgreen")
 zmAxK.grid()
 
 axK2 = fig.add_subplot(gs[0, 1])
-axK2.scatter(
-    timeArr, kWall, marker="x",
-    color="firebrick", label="wall value")
-axK2.scatter(
-    timeArr, kFC, marker="d",
-    color="steelblue", label="first cell")
-axK2.scatter(
-    timeArr, kKnopp, marker="+",
-    color="forestgreen", label="Knopp")
+axK2.scatter(timeArr, kWall, marker="x", color="firebrick", label="wall value")
+axK2.scatter(timeArr, kFC, marker="d", color="steelblue", label="first cell")
+axK2.scatter(timeArr, kKnopp, marker="+", color="forestgreen", label="Knopp")
 
 axErrK = fig.add_subplot(gs[1, 1])
 axErrK.scatter(timeArr, relErrK, color="steelblue")
@@ -154,27 +144,22 @@ axOm1.plot(omTend, Zmesh, marker="x", color="#0072B2")
 axOm1.scatter(omWall[-1], 0, color="firebrick")
 axOm1.scatter(omKnopp[-1], 0, marker="+", color="forestgreen")
 # zoom on near wall areazmX1 = omWall[-1] - 70
-zmX1, zmX2, = axOm1.get_xlim()
+(
+    zmX1,
+    zmX2,
+) = axOm1.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxOm1 = axOm1.inset_axes(
-    [0.4, 0.3, 0.47, 0.47],
-    xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxOm1 = axOm1.inset_axes([0.4, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
 zmAxOm1.plot(omTend, Zmesh, marker="x", color="#0072B2")
 zmAxOm1.scatter(omWall[-1], 0, color="firebrick")
 zmAxOm1.scatter(omKnopp[-1], 0, color="forestgreen")
 zmAxOm1.grid()
 
 axOm2 = fig.add_subplot(gs[0, 3])
-axOm2.scatter(
-    timeArr, omWall, marker="x",
-    color="firebrick", label="wall value")
-axOm2.scatter(
-    timeArr, omFC, marker="d",
-    color="steelblue", label="first cell")
-axOm2.scatter(
-    timeArr, omKnopp, marker="+",
-    color="forestgreen", label="Knopp")
+axOm2.scatter(timeArr, omWall, marker="x", color="firebrick", label="wall value")
+axOm2.scatter(timeArr, omFC, marker="d", color="steelblue", label="first cell")
+axOm2.scatter(timeArr, omKnopp, marker="+", color="forestgreen", label="Knopp")
 
 axErrOm = fig.add_subplot(gs[1, 3])
 axErrOm.scatter(timeArr, relErrOm, color="steelblue")

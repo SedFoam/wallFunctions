@@ -27,9 +27,9 @@ def getD0(ustar):
     - ustar: ndarray, friction velocity"""
     knP = kn * ustar / nuF  # roughness Reynolds number
     d0 = 0.03 * kn
-    d0 *= np.where(knP < 30, (knP/30)**(2/3), 1)
-    d0 *= np.where(knP < 45, (knP/45)**(1/4), 1)
-    d0 *= np.where(knP < 60, (knP/60)**(1/4), 1)
+    d0 *= np.where(knP < 30, (knP / 30) ** (2 / 3), 1)
+    d0 *= np.where(knP < 45, (knP / 45) ** (1 / 4), 1)
+    d0 *= np.where(knP < 60, (knP / 60) ** (1 / 4), 1)
     return d0
 
 
@@ -80,15 +80,13 @@ y1 = Zmesh[0]  # first cell center distance to wall
 for i, time in enumerate(timeList):
     # specific shear stress exerted by the wall
     tauW = rdf.readvector(
-        "./", time, "wallShearStress",
-        boundary="roughWall", verbose=False)[0, 0]
+        "./", time, "wallShearStress", boundary="roughWall", verbose=False
+    )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     omWall[i] = rdf.readscalar(
-        "./", time, "omega", boundary="roughWall",
-        verbose=False)[0]
-    kWall[i] = rdf.readscalar(
-        "./", time, "k", boundary="roughWall",
-        verbose=False)[0]
+        "./", time, "omega", boundary="roughWall", verbose=False
+    )[0]
+    kWall[i] = rdf.readscalar("./", time, "k", boundary="roughWall", verbose=False)[0]
 
 omKnopp[:] = omegaKnopp(ustarArr, y1)
 kKnopp[:] = kKnoppEisfeld(ustarArr)
@@ -101,7 +99,8 @@ if np.any(relErrOm > tolOm):
     print(
         "ERROR! omega values OpenFOAM and "
         + "computed from wallShearStress are not matching"
-        + f"\nrelative error on omega: {relErrOm}")
+        + f"\nrelative error on omega: {relErrOm}"
+    )
 else:
     print(f"omega value OK, maximum relative error {np.max(relErrOm)}")
 
@@ -110,7 +109,8 @@ if np.any(relErrK > tolK):
     print(
         "ERROR! k values OpenFOAM and "
         + "computed from wallShearStress are not matching"
-        + f"\nrelative error on k: {relErrK}")
+        + f"\nrelative error on k: {relErrK}"
+    )
 else:
     print(f"k value OK, maximum relative error {np.max(relErrK)}")
 
