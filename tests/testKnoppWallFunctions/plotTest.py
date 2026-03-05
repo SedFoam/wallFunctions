@@ -89,7 +89,9 @@ for i, time in enumerate(timeList):
     )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     # turbulent kinetic energy
-    kWall[i] = rdf.readscalar("./", time, "k", boundary="roughWall", verbose=False)[0]
+    kWall[i] = rdf.readscalar(
+        "./", time, "k", boundary="roughWall", verbose=False
+    )[0]
     kFC[i] = rdf.readscalar("./", time, "k", verbose=False)[0]
     # omega field
     omWall[i] = rdf.readscalar(
@@ -125,7 +127,9 @@ axK1.legend()
 ) = axK1.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxK = axK1.inset_axes([0.7, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxK = axK1.inset_axes(
+    [0.7, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2)
+)
 zmAxK.plot(kTend, Zmesh, marker="x", color="#0072B2")
 zmAxK.scatter(kWall[-1], 0, marker="o", color="firebrick")
 zmAxK.scatter(kKnopp[-1], 0, marker="+", color="forestgreen")
@@ -150,14 +154,18 @@ axOm1.scatter(omKnopp[-1], 0, marker="+", color="forestgreen")
 ) = axOm1.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxOm1 = axOm1.inset_axes([0.4, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxOm1 = axOm1.inset_axes(
+    [0.4, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2)
+)
 zmAxOm1.plot(omTend, Zmesh, marker="x", color="#0072B2")
 zmAxOm1.scatter(omWall[-1], 0, color="firebrick")
 zmAxOm1.scatter(omKnopp[-1], 0, color="forestgreen")
 zmAxOm1.grid()
 
 axOm2 = fig.add_subplot(gs[0, 3])
-axOm2.scatter(timeArr, omWall, marker="x", color="firebrick", label="wall value")
+axOm2.scatter(
+    timeArr, omWall, marker="x", color="firebrick", label="wall value"
+)
 axOm2.scatter(timeArr, omFC, marker="d", color="steelblue", label="first cell")
 axOm2.scatter(timeArr, omKnopp, marker="+", color="forestgreen", label="Knopp")
 

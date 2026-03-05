@@ -27,7 +27,9 @@ def omegaLog(y1, k, betaStar=0.09, kappa=0.41):
     return np.sqrt(k) / (np.sqrt(betaStar) * kappa * y1)
 
 
-def omegaSmooth(y1, k, blending, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
+def omegaSmooth(
+    y1, k, blending, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41
+):
     """
     Inputs:
     - y1: ndarray, distance from wall boundary
@@ -39,7 +41,9 @@ def omegaSmooth(y1, k, blending, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.4
     - kappa: float, von karman constant
     """
     F = blendingFunction.create(blending)
-    omega = F.blendOmega(y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41)
+    omega = F.blendOmega(
+        y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41
+    )
     return omega
 
 
@@ -52,7 +56,9 @@ def SrFuhrman(knP, knLim=5.0):
     smooth and rough regimes
     """
     SrLow = (200 / knP) ** 2
-    SrHigh = (100 / knP) + ((200 / knP) ** 2 - (100 / knP)) * np.exp(knLim - knP)
+    SrHigh = (100 / knP) + ((200 / knP) ** 2 - (100 / knP)) * np.exp(
+        knLim - knP
+    )
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
 
@@ -158,7 +164,9 @@ class blendingFunction(ABC):
 @blendingFunction.register_blend_type("max")
 class max(blendingFunction):
 
-    def blendOmega(self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
+    def blendOmega(
+        self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41
+    ):
         omVis = omegaVis(y1, nuF=nuF, beta1=beta1)
         omLog = omegaLog(y1, k, betaStar=betaStar, kappa=kappa)
         return np.where(omVis > omLog, omVis, omLog)
@@ -170,7 +178,9 @@ class binomial2(blendingFunction):
     def __init__(self):
         self.n = 2.0
 
-    def blendOmega(self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41):
+    def blendOmega(
+        self, y1, k, nuF=1e-6, beta1=0.075, betaStar=0.09, kappa=0.41
+    ):
         omVis = omegaVis(y1, nuF=nuF, beta1=beta1)
         omLog = omegaLog(y1, k, betaStar=betaStar, kappa=kappa)
         return (omVis**self.n + omLog**self.n) ** (1 / self.n)

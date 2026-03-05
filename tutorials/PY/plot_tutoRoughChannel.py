@@ -55,9 +55,13 @@ ksExp = 9.9e-3  # Nikuradse equivalent roughness height
 
 # load experimental data
 # u/ustar, z/ks
-uxDat, zuksDat = np.loadtxt(pathData + "u_rough.txt", unpack=True, delimiter=" ")
+uxDat, zuksDat = np.loadtxt(
+    pathData + "u_rough.txt", unpack=True, delimiter=" "
+)
 # k/ustar^2, z/ks
-kDat, zkksDat = np.loadtxt(pathData + "k_rough.txt", unpack=True, delimiter=" ")
+kDat, zkksDat = np.loadtxt(
+    pathData + "k_rough.txt", unpack=True, delimiter=" "
+)
 
 
 fig1, (axU, axK, axOm, axNut) = plt.subplots(ncols=4, figsize=(12, 6))
@@ -67,7 +71,9 @@ zmX1 = 50
 zmX2 = 500
 zmY1 = -0.002
 zmY2 = 0.05
-zmAx = axOm.inset_axes([0.6, 0.5, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAx = axOm.inset_axes(
+    [0.6, 0.5, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2)
+)
 
 fig2, (axUstar, axYplus, axKsPlus) = plt.subplots(nrows=3, figsize=(8, 8))
 
@@ -133,7 +139,9 @@ axUstar.legend(loc="upper left")
 axU.grid()
 axU.legend()
 
-axK.scatter(kDat * ustarExp**2, zkksDat * ksExp / Hwater, color="firebrick", marker="x")
+axK.scatter(
+    kDat * ustarExp**2, zkksDat * ksExp / Hwater, color="firebrick", marker="x"
+)
 axK.set_xlabel(r"$k\,[m^2.s^{-2}]$")
 axK.set_yticklabels([])
 axK.grid()

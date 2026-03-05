@@ -101,7 +101,9 @@ for i, time in enumerate(timeList):
     )[0, 0]
     ustarArr[i] = np.sqrt(np.abs(tauW))
     # turbulent kinetic energy
-    kWall[i] = rdf.readscalar("./", time, "k", boundary="roughWall", verbose=False)[0]
+    kWall[i] = rdf.readscalar(
+        "./", time, "k", boundary="roughWall", verbose=False
+    )[0]
     kFC[i] = rdf.readscalar("./", time, "k", verbose=False)[0]
     # omega field
     omWall[i] = rdf.readscalar(
@@ -142,7 +144,9 @@ axK.legend()
 ) = axK.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxK = axK.inset_axes([0.7, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxK = axK.inset_axes(
+    [0.7, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2)
+)
 zmAxK.plot(kTend, Zmesh, marker="x", color="steelblue")
 zmAxK.scatter(kWall[-1], 0, marker="o", color="firebrick")
 zmAxK.scatter(kKnopp[-1], 0, marker="+", color="forestgreen")
@@ -159,16 +163,22 @@ axOm1.scatter(omLee[-1], 0, marker="+", color="forestgreen")
 ) = axOm1.get_xlim()
 zmY1 = -0.002
 zmY2 = 0.003
-zmAxOm1 = axOm1.inset_axes([0.4, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2))
+zmAxOm1 = axOm1.inset_axes(
+    [0.4, 0.3, 0.47, 0.47], xlim=(zmX1, zmX2), ylim=(zmY1, zmY2)
+)
 zmAxOm1.plot(omTend, Zmesh, marker="x", color="steelblue")
 zmAxOm1.scatter(omWall[-1], 0, marker="o", color="firebrick")
 zmAxOm1.scatter(omLee[-1], 0, marker="+", color="forestgreen")
 zmAxOm1.grid()
 
 axOm2 = fig.add_subplot(gs[0, 2])
-axOm2.scatter(timeArr, omWall, marker="o", color="firebrick", label="wall value")
+axOm2.scatter(
+    timeArr, omWall, marker="o", color="firebrick", label="wall value"
+)
 axOm2.scatter(timeArr, omFC, marker="x", color="steelblue", label="first cell")
-axOm2.scatter(timeArr, omLee, marker="+", color="forestgreen", label="Cheng-Hsien Lee")
+axOm2.scatter(
+    timeArr, omLee, marker="+", color="forestgreen", label="Cheng-Hsien Lee"
+)
 
 axErr = fig.add_subplot(gs[1, 2])
 axErr.scatter(timeArr, relErr, color="steelblue")
@@ -177,7 +187,9 @@ axNut = fig.add_subplot(gs[:, 3])
 axNut.plot(nutField, Zmesh, marker="x", color="steelblue")
 axNut.scatter(nutWall, 0, marker="o", color="firebrick")
 axNut.scatter(nutLee(ustarArr[-1], y1), 0, marker="+", color="forestgreen")
-axNut.axline((0, 0), slope=1 / (ustarArr[-1] * kappa), color="black", ls="dashed")
+axNut.axline(
+    (0, 0), slope=1 / (ustarArr[-1] * kappa), color="black", ls="dashed"
+)
 
 axK.set_title(r"$k$ profile")
 axK.set_xlabel(r"$k\,[m^2s^{-2}]$")

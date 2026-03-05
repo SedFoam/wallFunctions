@@ -27,7 +27,9 @@ def getSr(knP, knLim=5.0):
     smooth and rough regimes
     """
     SrLow = (200 / knP) ** 2
-    SrHigh = (100 / knP) + ((200 / knP) ** 2 - (100 / knP)) * np.exp(knLim - knP)
+    SrHigh = (100 / knP) + ((200 / knP) ** 2 - (100 / knP)) * np.exp(
+        knLim - knP
+    )
     Sr = np.where(knP < knLim, SrLow, SrHigh)
     return Sr
 

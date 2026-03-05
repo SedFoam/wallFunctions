@@ -86,7 +86,9 @@ for i, time in enumerate(timeList):
     omWall[i] = rdf.readscalar(
         "./", time, "omega", boundary="roughWall", verbose=False
     )[0]
-    kWall[i] = rdf.readscalar("./", time, "k", boundary="roughWall", verbose=False)[0]
+    kWall[i] = rdf.readscalar(
+        "./", time, "k", boundary="roughWall", verbose=False
+    )[0]
 
 omKnopp[:] = omegaKnopp(ustarArr, y1)
 kKnopp[:] = kKnoppEisfeld(ustarArr)
